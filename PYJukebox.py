@@ -129,4 +129,4 @@ async def rmall(ctx):
             await message.delete()
 
 
-client.run('MTA0NjI5ODI2NDE2MjUzMzUwNw.GGgI-T.msn6OXmY_WkhGlL3HxfFq5F7kB5WpyoVWoWquk')
+client.run('TOKEN')
