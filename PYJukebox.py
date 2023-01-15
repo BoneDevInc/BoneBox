@@ -29,13 +29,12 @@ async def download(ctx, url: str, name: str):
     await ctx.respond("Downloading "+name+" from: "+url)
     name += ".webm"
     ydl_opts = {
-        'outtmpl': name,
-        'format': 'worstaudio/worst',
+        'format': 'bestaudio/best',
         'postprocessors': [{
             'key': 'FFmpegExtractAudio',
             'preferredcodec': 'mp3',
-            'preferredquality': '96',
-        }]
+            'preferredquality': '192',
+        }],
     }
     # create a youtube_dl object and download the audio
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
@@ -46,25 +45,28 @@ async def download(ctx, url: str, name: str):
     
 @client.slash_command()
 async def play(ctx, filename: str):
-    name = filename
-    filename += ".mp3"
-    if os.path.exists(filename):
-        print(f"The file {filename} exists.")
-        await ctx.respond("Playing: '"+filename+"'")
-    else:
-        print(f"The file {filename} does not exist.")
-        await ctx.respond("The Music With The ID:  '"+name+"'  Doesnt Exist (Use /list To Veiw All Availible Music IDs) ")
-        return
-    # open the file and play it
     channel = ctx.author.voice.channel
+    if channel is None:
+        await ctx.send("You are not in a voice channel.")
+        return
+    ydl_opts = {
+        'format': 'bestaudio/best',
+        'postprocessors': [{
+            'key': 'FFmpegExtractAudio',
+            'preferredcodec': 'mp3',
+            'preferredquality': '192',
+        }],
+    }
+    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+        result = ydl.extract_info(f'ytsearch1:{filename}', download=False)
+        url = result['entries'][0]['url']
+
+    # Connect to voice channel and play music
     if not channel.guild.voice_client:
         await channel.connect()
-    vc = discord.utils.get(ctx.bot.voice_clients, guild=ctx.guild)
-    audio_source = discord.FFmpegPCMAudio(filename)
-    voice_client = channel.guild.voice_client
-    voice_client.play(audio_source)
-    while voice_client.is_playing():
-        await asyncio.sleep(1)
+    voice.play(discord.FFmpegPCMAudio(url))
+    voice.source = discord.PCMVolumeTransformer(voice.source)
+    voice.source.volume = 0.5
 
 @client.slash_command()
 async def join(ctx):
@@ -128,5 +130,4 @@ async def rmall(ctx):
             print(str(message))
             await message.delete()
 
-
-client.run('TOKEN')
+client.run('token here harhar')
