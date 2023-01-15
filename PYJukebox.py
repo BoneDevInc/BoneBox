@@ -4,8 +4,6 @@ import asyncio
 import time
 import os
 
-dir = "/test/"
-
 intents = discord.Intents.default()
 intents.message_content = True
 
@@ -31,17 +29,34 @@ async def play(ctx, filename: str):
     }
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
         result = ydl.extract_info(f'ytsearch1:{filename}', download=False)
+        if not result['entries']:
+            await ctx.send("No video found.")
+            return
         url = result['entries'][0]['url']
+        # title = result['entries'][0]['title']
 
     # Connect to voice channel and play music
     
     if not channel.guild.voice_client:
         await channel.connect()
-    ctx.respond("playing "+url)
+    # await ctx.respond("playing: "+title)
     voice = channel.guild.voice_client
     voice.play(discord.FFmpegPCMAudio(url))
     voice.source = discord.PCMVolumeTransformer(voice.source)
-    voice.source.volume = 0.5
+    voice.source.volume = 0.2
+
+@client.slash_command()
+async def set_volume(ctx, volume: float):
+    if volume < 0 or volume > 100:
+        await ctx.respond("Volume must be between 0 and 100.")
+        return
+    voice_client = ctx.guild.voice_client
+    if not voice_client:
+        ctx.respond("I am not currently playing any music.")
+        return
+    voice_client.source.volume = volume/100
+    await ctx.respond(f"Volume set to {volume}%.")
+    return
 
 @client.slash_command()
 async def join(ctx):
@@ -72,6 +87,10 @@ async def pause(ctx):
     await ctx.respond("Paused the current music.")
 
 @client.slash_command()
+async def stop(ctx):
+    ctx.voice_client.stop()
+
+@client.slash_command()
 async def resume(ctx):
     print("pasue")
     voice_client = ctx.guild.voice_client
@@ -82,11 +101,4 @@ async def resume(ctx):
     voice_client.resume()
     await ctx.respond("Resumed the current music.")
 
-@client.slash_command()
-async def rmall(ctx):
-    async for message in ctx.channel.history(limit=None):
-        if message.content.startswith("pls"):
-            print(str(message))
-            await message.delete()
-
-client.run('harhar token here')
+client.run('tokenere')
