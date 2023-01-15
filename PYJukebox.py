@@ -14,40 +14,12 @@ client = discord.Bot()
 @client.event
 async def on_ready():
     print(f'We have logged in as {client.user}')
-
-@client.event
-async def on_message(message):
-    if message.author == client.user:
-        return
-
-    if message.content.startswith('$hello'):
-        await message.channel.send('Hello!')
-
-
-@client.slash_command()
-async def download(ctx, url: str, name: str):
-    await ctx.respond("Downloading "+name+" from: "+url)
-    name += ".webm"
-    ydl_opts = {
-        'format': 'bestaudio/best',
-        'postprocessors': [{
-            'key': 'FFmpegExtractAudio',
-            'preferredcodec': 'mp3',
-            'preferredquality': '192',
-        }],
-    }
-    # create a youtube_dl object and download the audio
-    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-        ydl.download([url])
-    name = name[:-5] 
-    embed = None
-    await ctx.channel.send("Finished Dowloading: <"+name+"> From: "+url, embed=embed)
     
 @client.slash_command()
 async def play(ctx, filename: str):
     channel = ctx.author.voice.channel
     if channel is None:
-        await ctx.send("You are not in a voice channel.")
+        await ctx.respond("You are not in a voice channel.")
         return
     ydl_opts = {
         'format': 'bestaudio/best',
@@ -62,8 +34,10 @@ async def play(ctx, filename: str):
         url = result['entries'][0]['url']
 
     # Connect to voice channel and play music
+
     if not channel.guild.voice_client:
        voice = await channel.connect()
+    ctx.respond("playing "+url)
     voice.play(discord.FFmpegPCMAudio(url))
     voice.source = discord.PCMVolumeTransformer(voice.source)
     voice.source.volume = 0.5
@@ -84,22 +58,6 @@ async def disconnect(ctx):
     voice_client.stop()
     await vc.disconnect()
     print("Bot disconnected")
-
-@client.slash_command()
-async def list(ctx):
-    await ctx.respond("Getting Music ID List:")
-    # Initialize a new embed object
-    embed = discord.Embed(title="Current Files", description="")
-    i = 0
-    files = [f for f in os.listdir('.') if os.path.isfile(f)]
-    for f in files:
-        if f != "txt.py":
-            # Add each file name to a new field in the embed
-            embed.add_field(name=str(i)+". "+f, value="\u200b", inline=True)
-            i =  i + 1
-
-    # Send the embed to the channel
-    await ctx.channel.send(embed=embed)
 
 @client.slash_command()
 async def pause(ctx):
@@ -130,4 +88,4 @@ async def rmall(ctx):
             print(str(message))
             await message.delete()
 
-client.run('tokenere')
+client.run('harhar token here')
