@@ -34,10 +34,11 @@ async def play(ctx, filename: str):
         url = result['entries'][0]['url']
 
     # Connect to voice channel and play music
-
+    
     if not channel.guild.voice_client:
-       voice = await channel.connect()
+        await channel.connect()
     ctx.respond("playing "+url)
+    voice = channel.guild.voice_client
     voice.play(discord.FFmpegPCMAudio(url))
     voice.source = discord.PCMVolumeTransformer(voice.source)
     voice.source.volume = 0.5
