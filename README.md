@@ -1,7 +1,9 @@
 # PYJukebox
 Commands:
-/list
+/stop
 /play
 /pause
 /resume
 /disconnect
+/set-volume
+/join
