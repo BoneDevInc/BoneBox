@@ -63,7 +63,7 @@ async def play(ctx, filename: str):
 
     # Connect to voice channel and play music
     if not channel.guild.voice_client:
-        await channel.connect()
+       voice = await channel.connect()
     voice.play(discord.FFmpegPCMAudio(url))
     voice.source = discord.PCMVolumeTransformer(voice.source)
     voice.source.volume = 0.5
@@ -130,4 +130,4 @@ async def rmall(ctx):
             print(str(message))
             await message.delete()
 
-client.run('token here harhar')
+client.run('tokenere')
