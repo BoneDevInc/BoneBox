@@ -4,10 +4,11 @@ import asyncio
 import time
 import os
 
+
 intents = discord.Intents.default()
 intents.message_content = True
 
-client = discord.Bot()
+client = discord.Bot(intents = intents)
 
 #shut the fuck upinator changes here
 
@@ -42,7 +43,6 @@ async def play(ctx, filename: str):
     
     if not channel.guild.voice_client:
         await channel.connect()
-    await ctx.respond("playing something that matched: ^^^", ephemeral = stfu)
     voice = channel.guild.voice_client
     voice.play(discord.FFmpegPCMAudio(url))
     voice.source = discord.PCMVolumeTransformer(voice.source)
@@ -106,4 +106,4 @@ async def resume(ctx):
     voice_client.resume()
     await ctx.respond("Resumed the current music.", ephemeral = stfu)
 
-client.run('tokenere')
+client.run('ODY3NTY1OTQzMjkwNDYyMjE4.GIAkry.PS7kVzNa_xNMn2J_K-Hx4BseiBdftM-ova51ck')
