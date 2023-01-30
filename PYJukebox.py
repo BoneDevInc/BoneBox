@@ -106,4 +106,4 @@ async def resume(ctx):
     voice_client.resume()
     await ctx.respond("Resumed the current music.", ephemeral = stfu)
 
-client.run('ODY3NTY1OTQzMjkwNDYyMjE4.GIAkry.PS7kVzNa_xNMn2J_K-Hx4BseiBdftM-ova51ck')
+client.run('tokenere')
