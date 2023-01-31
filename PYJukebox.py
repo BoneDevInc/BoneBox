@@ -1,18 +1,23 @@
 import discord
 import youtube_dl
-import asyncio
-import time
-import os
 
-
-intents = discord.Intents.default()
-intents.message_content = True
-
+intents = discord.Intents.all()
 client = discord.Bot(intents = intents)
+stfu = True
 
-#shut the fuck upinator changes here
+class MyView(discord.ui.View): # Create a class called MyView that subclasses discord.ui.View
+    def __init__(self, person, **kwargs):
+        self.person = person
+        super().__init__(**kwargs)
+    
+    @discord.ui.button(label="Verify", style=discord.ButtonStyle.primary, emoji="😎") # Create a button with the label "😎 Click me!" with color Blurple
+    async def button_callback(self, button, interaction):
+        await interaction.response.send_message("You Are Now Verified!")
+        await self.person.add_roles(self.person.guild.get_role(1061340808445431920))
 
-stfu = True;
+@client.event
+async def on_member_join(person):
+    await person.send(f"Thanks for Joining {person.guild.name}", view=MyView(person))
 
 @client.event
 async def on_ready():
@@ -106,4 +111,4 @@ async def resume(ctx):
     voice_client.resume()
     await ctx.respond("Resumed the current music.", ephemeral = stfu)
 
-client.run('tokenere')
+client.run('No Token For You Buddy')
