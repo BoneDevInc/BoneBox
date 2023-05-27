@@ -1,4 +1,4 @@
-# PYJukebox
+# BoneBox
 Commands:
 /stop
 /play
