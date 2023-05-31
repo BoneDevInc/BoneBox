@@ -223,4 +223,4 @@ async def resume(interaction):
     voice_client.resume()
     await interaction.response.send_message("Resumed the current music.", ephemeral = stfu)
 
-client.run('ODY3NTY1OTQzMjkwNDYyMjE4.GAmd_2.RAICT5EMG5gEhc7F3L1iIVHZ_r4_vgHrxTSEDU')
+client.run('#Fml')
